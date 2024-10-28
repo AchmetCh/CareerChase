@@ -13,7 +13,7 @@ exports.register = async (req, res) => {
     if (user) return res.status(400).json({ message: "Email already exists" });
     const newUser = new User({ email, password: hashedPassword });
     await newUser.save();
-    const token = jwt.sign({ id: newUser._id }, PRIVATE_KEYS, {
+    const token = jwt.sign({ userId: newUser._id }, PRIVATE_KEYS, {
       expiresIn: "1h",
     });
     res.cookie("access_token", token, {
@@ -34,14 +34,31 @@ exports.login = async (req, res) => {
     if (!user)
       return res.status(400).json({ message: "Invalid email or password" });
     const isValidPassword = bcrypt.compareSync(password, user.password);
-    if (!isValidPassword)
-      return res.status(400).json({ message: "Invalid email or" });
-    const token = jwt.sign({ id: user._id }, PRIVATE_KEYS, { expiresIn: "1h" });
+    if (!isValidPassword) return res.status(400).json({ message: "Invalid email or password" });
+    const token = jwt.sign({ userId: user._id }, PRIVATE_KEYS, {
+      expiresIn: "1h",
+    });
     res
-    .cookie("access_token", token, {httpOnly: true, maxAge: 3600000}) // 1 hour
-    .status(200)
-    res.json({ message: "User logged in successfully" });
+      .cookie("access_token", token, { httpOnly: true, maxAge: 3600000 }) // 1 hour
+      .status(200)
+      .json({ message: "User logged in successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error logging in user", error });
+  }
+};
+
+// Update user Profile
+exports.updateProfile = async (req, res) => {
+  const { email, password } = req.body;
+  const userId = req.user.userId;
+  try {
+    const updates = {}
+    if (email) updates.email = email
+    if (password) updates.password = bcrypt.hashSync(password, SALT_ROUNDS)
+      const user = await User.findByIdAndUpdate(userId, updates, { new: true });
+    if (!user) return res.status(400).json({message: 'User not found'})
+      res.json({message: 'Profile updated successfully'})
+  } catch (error) {
+    res.status(500).json({ message: "Error updating user profile", error });
   }
 };

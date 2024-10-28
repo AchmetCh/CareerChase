@@ -13,17 +13,7 @@ const jobApplicationSchema = new mongoose.Schema(
     applicationDate: {
       type: Date,
       required: true,
-    },
-    status: {
-      type: String,
-      enum: [
-        "Applied",
-        "Followed-up",
-        "Interview Scheduled",
-        "Interview Completed",
-        "Rejected",
-      ],
-      default: "Applied",
+      default: Date.now
     },
     followUpDays: {
       type: Number,
@@ -36,6 +26,17 @@ const jobApplicationSchema = new mongoose.Schema(
     interviewDate: {
       type: Date,
       default: null,
+    },
+    status: {
+      type: String,
+      enum: [
+        "Applied",
+        "Followed-up",
+        "Interview Scheduled",
+        "Interview Completed",
+        "Rejected",
+      ],
+      default: "Applied",
     },
   },
   {
