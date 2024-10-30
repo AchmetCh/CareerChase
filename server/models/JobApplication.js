@@ -10,6 +10,10 @@ const jobApplicationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    jobEmail: {
+      type: String,
+      required: true,
+    },
     applicationDate: {
       type: Date,
       required: true,
@@ -32,6 +36,7 @@ const jobApplicationSchema = new mongoose.Schema(
       enum: [
         "Applied",
         "Followed-up",
+         "No Response",
         "Interview Scheduled",
         "Interview Completed",
         "Rejected",
