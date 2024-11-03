@@ -8,14 +8,19 @@ const port = 8000
 const cookieParser = require('cookie-parser');
 app.use(express.json())
 
-app.options('*', cors())
+// app.options('*', cors())
+// app.use(cors({
+//     origin: '*', // Allow multiple origins
+//     methods: 'GET,POST,PUT,DELETE',
+//     allowedHeaders: 'Content-Type,access_token',
+//     credentials: true, // Enable credentials if needed
+//     optionsSuccessStatus: 200
+//   }));
+// Simple CORS configuration
 app.use(cors({
-    origin: '*', // Allow multiple origins
-    methods: 'GET,POST,PUT,DELETE',
-    allowedHeaders: 'Content-Type,Authorization',
-    credentials: true, // Enable credentials if needed
-    optionsSuccessStatus: 200
-  }));
+  origin: true,  // Allows all origins
+  credentials: true
+}));
   app.use(cookieParser());
 
   app.use('/user', authRoutes)

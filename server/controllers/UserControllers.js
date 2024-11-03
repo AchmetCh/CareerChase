@@ -16,13 +16,9 @@ exports.register = async (req, res) => {
     const token = jwt.sign({ userId: newUser._id }, PRIVATE_KEYS, {
       expiresIn: "1h",
     });
-    res.cookie("access_token", token, {
-      httpOnly: true,
-      maxAge: 3600000, // 1 hour
-    });
-    res.json({ message: "User created successfully" });
+    res.status(201).json({ token, message: "User registered successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Error creating user", error });
+    res.status(500).json({ message: "Error registering user", error });
   }
 };
 
@@ -38,10 +34,7 @@ exports.login = async (req, res) => {
     const token = jwt.sign({ userId: user._id }, PRIVATE_KEYS, {
       expiresIn: "1h",
     });
-    res
-      .cookie("access_token", token, { httpOnly: true, maxAge: 3600000 }) // 1 hour
-      .status(200)
-      .json({ message: "User logged in successfully" });
+    res.status(200).json({ token, message: "Login successful" });
   } catch (error) {
     res.status(500).json({ message: "Error logging in user", error });
   }

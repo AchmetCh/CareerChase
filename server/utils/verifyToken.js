@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const { createError } = require("./error");
 
 const verifyToken = (req, res, next) => {
-  const token = req.cookies.access_token;
+  const token = req.header('Authorization');
   if (!token) return next(createError(401, "You are not authenticated!"));
   jwt.verify(token, process.env.PRIVATE_KEY, (err, user) => {
     if (err) return next(createError(403, "Token is invalid!!"));
@@ -10,6 +10,7 @@ const verifyToken = (req, res, next) => {
     next();
   });
 };
+
 
 const verifyUser = (req,res,next) => {
     verifyToken(req,res,next, () => {
