@@ -1,25 +1,36 @@
 import { useState, useEffect } from 'react'
 import Login from './components/auth/Login'
 import './App.css'
+import Header from './components/pages/Header'
 import { useAuth } from './ContextApi';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import NewJobForm from './components/jobs/NewJobForm';
+import Home from './components/pages/Home'
 
 
 
 function App() {
-const {userId} = useAuth()
+  const { userId, token } = useAuth()
   return (
     <div className="app">
-      {userId? (
+      <Header />
+      {token ? (
         <>
-          <h1>CareerChase</h1>
+          <Routes>
+            <Route path='/jobs/newJob' element={<NewJobForm />} />
+          </Routes>
         </>) :
         (
           <>
-            <Login />
+            <Routes>
+              <Route path='/login' element={<Login />} />
+            </Routes>
           </>
         )}
 
-
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
     </div>
 
   )
