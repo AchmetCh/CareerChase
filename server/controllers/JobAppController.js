@@ -152,6 +152,7 @@ exports.updateJobStatus = async (req, res) => {
         const validStatuses = [
             "Applied",
             "Followed-up",
+            "No Answer",
             "Interview Scheduled",
             "Interview Completed",
             "Rejected",

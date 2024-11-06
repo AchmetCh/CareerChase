@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import Login from './components/auth/Login'
 import './App.css'
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Header from './components/pages/Header'
 import { useAuth } from './ContextApi';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -17,20 +19,22 @@ function App() {
       {token ? (
         <>
           <Routes>
+          <Route path="/" element={<Home />} />
             <Route path='/jobs/newJob' element={<NewJobForm />} />
           </Routes>
         </>) :
         (
           <>
             <Routes>
-              <Route path='/login' element={<Login />} />
+              <Route path='/' element={<Login />} />
             </Routes>
           </>
         )}
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        
       </Routes>
+      <ToastContainer/>
     </div>
 
   )

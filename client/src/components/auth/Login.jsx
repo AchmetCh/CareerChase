@@ -6,42 +6,35 @@ import { Container, Card, Button, Row, Col, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from '../../ContextApi';
 import { backendApi } from "../../Api";
 
 const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const navigate = useNavigate()
-
-    // Login.jsx - When setting the LocalStorage
+    const { login } = useAuth();
+ 
     const handleLogin = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
         try {
             const response = await axios.post(`${backendApi}/user/login`, {
-                email: email,
-                password: password
-            },
-                {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
-            )
-            const token = response.data.token
-            localStorage.setItem('Authorization', token)
-            toast.success('Login Successful',
-                {
-                    autoClose: 2000,
-                    onClose: () => window.location.href = '/'
-                }
-            )
+                email,
+                password
+            });
+
+            const token = response.data.token;
+            await login(token); // Use the login function from context
+            toast.success('Login Successful', {
+                autoClose: 2000,
+                onClose: () => setTimeout(() => navigate('/'), 2000)
+            });
         } catch (error) {
-            toast.error('Invalid Email or Password',
-                {
-                    autoClose: 2000,
-                })
+            toast.error('Invalid Email or Password', {
+                autoClose: 2000,
+            });
         }
-    }
+    };
 
     return (
         <div>
@@ -85,20 +78,3 @@ const Login = () => {
 }
 
 export default Login
-{/* <form onSubmit={handleLogin}>
-    <label>Email:
-        <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-        />
-    </label>
-    <label>Password:
-        <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-        />
-    </label>
-    <button type='submit'>Login</button>
-</form> */}

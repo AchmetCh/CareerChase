@@ -36,7 +36,7 @@ const jobApplicationSchema = new mongoose.Schema(
       enum: [
         "Applied",
         "Followed-up",
-         "No Response",
+        "No Answer",
         "Interview Scheduled",
         "Interview Completed",
         "Rejected",
