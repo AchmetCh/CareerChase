@@ -96,8 +96,8 @@ const Home = () => {
               key={index}
               className={`d-flex flex-column flex-md-row align-items-center justify-content-between 
               p-3 ${job.status === 'Rejected' ? 'bg-danger text-white'
-                  : job.status === 'Interview Scheduled' ? 'bg-success'
-                    : job.status === 'Followed-up' ? 'bg-primary'
+                  : job.status === 'Interview Scheduled' ? 'bg-success text-white'
+                    : job.status === 'Followed-up' ? 'bg-primary text-white'
                       : 'bg-dark text-light'}`}
             >
               <Row className="w-100">
