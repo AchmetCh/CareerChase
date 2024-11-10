@@ -5,11 +5,12 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import UserJobs from "../jobs/UserJobs";
 import { useAuth } from '../../ContextApi';
 
 
 const Header = () => {
-    const { token, logout } = useAuth()
+    const { userId, token, logout } = useAuth()
     const navigate = useNavigate()
 
     const handleLogout = async () => {
@@ -29,9 +30,15 @@ const Header = () => {
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
                             {token ? (
-                                <LinkContainer to="/jobs/newJob">
-                                    <Nav.Link className="text-white">Create Job</Nav.Link>
-                                </LinkContainer>
+                                <>
+                                    <LinkContainer to="/jobs/newJob">
+                                        <Nav.Link className="text-white">Create Job</Nav.Link>
+                                    </LinkContainer>
+
+                                    <LinkContainer to={`/jobs/getJobById/${userId}`}>
+                                        <Nav.Link className="text-white">User  Jobs</Nav.Link>
+                                    </LinkContainer>
+                                </>
                             ) : (
                                 <>
 

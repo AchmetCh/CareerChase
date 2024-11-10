@@ -7,6 +7,7 @@ import Header from './components/pages/Header'
 import { useAuth } from './ContextApi';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import NewJobForm from './components/jobs/NewJobForm';
+import UserJobs from './components/jobs/UserJobs';
 import Home from './components/pages/Home'
 
 
@@ -21,6 +22,7 @@ function App() {
           <Routes>
           <Route path="/" element={<Home />} />
             <Route path='/jobs/newJob' element={<NewJobForm />} />
+            <Route path='/jobs/getJobById/:userId' element={<UserJobs />} />
           </Routes>
         </>) :
         (
