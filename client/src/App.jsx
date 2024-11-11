@@ -22,7 +22,7 @@ function App() {
           <Routes>
           <Route path="/" element={<Home />} />
             <Route path='/jobs/newJob' element={<NewJobForm />} />
-            <Route path='/jobs/getJobById/:userId' element={<UserJobs />} />
+            <Route path='/jobs/getJobById/:id' element={<UserJobs />} />
           </Routes>
         </>) :
         (

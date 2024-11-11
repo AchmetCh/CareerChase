@@ -43,6 +43,10 @@ const jobApplicationSchema = new mongoose.Schema(
       ],
       default: "Applied",
     },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    }
   },
   {
     timestamps: true,
