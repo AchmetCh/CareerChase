@@ -13,6 +13,7 @@ const Home = () => {
   const [jobs, setJobs] = useState([])
   const [loading, setLoading] = useState({});
   const { token } = useAuth()
+  const navigate = useNavigate()
 
   const statusOptions = [
     "Applied",
@@ -22,23 +23,23 @@ const Home = () => {
     "Interview Completed",
     "Rejected",
   ];
-
-  useEffect(() => {
-    const fetchAllJobs = async () => {
-      try {
-        const response = await axios.get(`${backendApi}/jobs/getAllJobs`, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: token
-          },
-        });
-        setJobs(response.data);
-      } catch (error) {
-        console.error(error);
-      }
+  const fetchAllJobs = async () => {
+    try {
+      const response = await axios.get(`${backendApi}/jobs/getAllJobs`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token
+        },
+      });
+      setJobs(response.data);
+    } catch (error) {
+      console.error(error);
     }
+  };
+  
+  useEffect(() => {
     fetchAllJobs();
-  }, [])
+  }, []);
 
   const sendFollowUpEmail = async (id) => {
     setLoading((prev) => ({ ...prev, [id]: true }));
@@ -54,7 +55,10 @@ const Home = () => {
         }
       );
       toast.success("Follow-up email sent successfully", {
-        autoClose: 2000,
+        autoClose: 1000,
+        onClose: () => {
+          fetchAllJobs(); 
+        }
       });
     } catch (error) {
       console.error(error);
@@ -77,7 +81,7 @@ const Home = () => {
         )
       );
       toast.success("Status updated successfully", {
-        autoClose: 2000,
+        autoClose: 1000,
       });
     } catch (error) {
       console.error(error);

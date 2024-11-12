@@ -52,7 +52,7 @@ const sendFollowUpEmail = async (email, jobTitle, followUpMessage) => {
 // Create new Job
 exports.createJob = async (req, res) => {
   try {
-    const { company, jobTitle, jobEmail, applicationDate, user } = req.body;
+    const { company, jobTitle, jobEmail, applicationDate } = req.body;
     const {userId} = req.user
     // Input validation for required fields
     if (!company || !jobTitle || !jobEmail || !applicationDate) {
@@ -103,7 +103,7 @@ exports.getAllJobs = async (req, res) => {
 exports.getJobById = async (req, res) => {
   try {
     const jobId = req.params.id;
-    const job = await JobApp.findById({jobId});
+    const job = await JobApp.findById(jobId);
     if (!job) return res.status(404).json({ message: "Job not found." });
     return res.status(200).json(job);
   } catch (error) {
@@ -133,8 +133,8 @@ exports.updateJob = async (req, res) => {
 exports.deleteJob = async (req, res) => {
   try {
     const jobId = req.params.id;
-    await JobApp.findByIdAndDelete(jobId);
-    if (!jobApp) return res.status(404).json({message: 'No Job found'})
+    const deleteJob = await JobApp.findByIdAndDelete(jobId);
+    if (!deleteJob) return res.status(404).json({message: 'No Job found'})
     return res.status(200).json({ message: "Job deleted successfully." });
   } catch (error) {
     console.error(error); // Log the error for debugging

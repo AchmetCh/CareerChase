@@ -54,42 +54,39 @@ const UserJobs = () => {
   }
   return (
     <>
-      <Container>
-        <h1>My Jobs</h1>
-        <ListGroup>
-          {jobs.map((job, index) => (
-            <ListGroup.Item key={index}>
-              <Row>
-                <Col xs={2}>
-                  <h4>Company name</h4>
-                  <h5>{job.company}</h5>
-                </Col>
-                <Col>
-                  <h4>Job Title</h4>
-                  <h5>{job.jobTitle}</h5>
-                </Col>
-                <Col>
-                  <h4>Application Date</h4>
-                  <h5>{job.applicationDate.slice(0, 10)}</h5>
-                </Col>
-                <Col xs={2}>
-                  <Button
-                    variant="danger"
-                    onClick={() => handleDelete(job._id)}>Delete Job</Button>
-                </Col>
-                <Col xs={2}>
+    <Container>
+      <h1 className="text-center my-4">My Jobs</h1>
+      <ListGroup>
+        {jobs.map((job, index) => (
+          <ListGroup.Item key={index} className="mb-3">
+            <Row className="align-items-center">
+              <Col xs={8}  md={2}>
+                <h5>Company:</h5>
+                <p>{job.company}</p>
+              </Col>
+              <Col xs={8}  md={2}>
+                <h5>Job Title:</h5>
+                <p>{job.jobTitle}</p>
+              </Col>
+              <Col xs={8}  md={2}>
+                <h5>Application Date:</h5>
+                <p>{job.applicationDate.slice(0, 10)}</p>
+              </Col>
+              <Col xs={8}  md={2} className="d-flex justify-content-center">
+                <Button variant="danger" onClick={() => handleDelete(job._id)}>Delete Job</Button>
+              </Col>
+              <Col xs={8}  md={3} className="d-flex justify-content-center">
                 <Link to={`/jobs/updateJob/${job._id}`}>
-                      <Button variant="success" className="m-2">Edit</Button>
-                    </Link>
-                </Col>
-              </Row>
-            </ListGroup.Item>
-          ))}
-        </ListGroup>
-      </Container>
-      <ToastContainer />
-      <ToastContainer />
-    </>
+                  <Button variant="success" className="m-2">Edit</Button>
+                </Link>
+              </Col>
+            </Row>
+          </ListGroup.Item>
+        ))}
+      </ListGroup>
+    </Container>
+    <ToastContainer />
+  </>
   )
 }
 

@@ -98,7 +98,7 @@ const EditJob = () => {
                                 <Form.Control 
                                     type="date" 
                                     name="applicationDate" 
-                                    value={job.applicationDate} 
+                                    value={job.applicationDate?.slice(0, 10) || ''}  
                                     onChange={handleInputChange} 
                                 />
                             </Form.Group>
