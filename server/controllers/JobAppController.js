@@ -52,8 +52,8 @@ const sendFollowUpEmail = async (email, jobTitle, followUpMessage) => {
 // Create new Job
 exports.createJob = async (req, res) => {
   try {
-    const { company, jobTitle, jobEmail, applicationDate } = req.body;
-
+    const { company, jobTitle, jobEmail, applicationDate, user } = req.body;
+    const {userId} = req.user
     // Input validation for required fields
     if (!company || !jobTitle || !jobEmail || !applicationDate) {
       return res.status(400).json({
@@ -66,6 +66,7 @@ exports.createJob = async (req, res) => {
       jobTitle,
       jobEmail,
       applicationDate,
+      user: userId
     });
 
     await newJob.save();
@@ -102,7 +103,7 @@ exports.getAllJobs = async (req, res) => {
 exports.getJobById = async (req, res) => {
   try {
     const jobId = req.params.id;
-    const job = await JobApp.findById(jobId);
+    const job = await JobApp.findById({jobId});
     if (!job) return res.status(404).json({ message: "Job not found." });
     return res.status(200).json(job);
   } catch (error) {
@@ -142,6 +143,18 @@ exports.deleteJob = async (req, res) => {
       .json({ message: "An error occurred while deleting the job." });
   }
 };
+
+// Get user jobs
+exports.getUserJobs = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const jobs = await JobApp.find({ user: userId });
+    if (!jobs) return res.status(404).json({ message: "No jobs found."})
+      return res.status(200).json(jobs);
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+  }
+}
 
 // Mark as rejected
 exports.updateJobStatus = async (req, res) => {

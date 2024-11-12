@@ -2,7 +2,7 @@ import React from "react";
 import { Navbar, Nav, Container, Button, Form } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import UserJobs from "../jobs/UserJobs";
@@ -12,6 +12,7 @@ import { useAuth } from '../../ContextApi';
 const Header = () => {
     const { userId, token, logout } = useAuth()
     const navigate = useNavigate()
+    const { id } = useParams()
 
     const handleLogout = async () => {
         await logout();
@@ -35,7 +36,7 @@ const Header = () => {
                                         <Nav.Link className="text-white">Create Job</Nav.Link>
                                     </LinkContainer>
 
-                                    <LinkContainer to={`/jobs/getJobById/${userId}`}>
+                                    <LinkContainer to={`/jobs/getUserJobs/${userId}`}>
                                         <Nav.Link className="text-white">User  Jobs</Nav.Link>
                                     </LinkContainer>
                                 </>

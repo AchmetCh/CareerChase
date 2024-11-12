@@ -16,7 +16,7 @@ const NewJobForm = () => {
         company: "",
         jobTitle: "",
         jobEmail: "",
-        applicationDate: ""
+        applicationDate: new Date().toISOString().split('T')[0]
     })
     const {token} = useAuth()
     const navigate = useNavigate()
