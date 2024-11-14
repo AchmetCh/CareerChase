@@ -10,6 +10,7 @@ router.get('/getUserJobs/:id', auth.verifyToken, JobController.getUserJobs)
 router.put('/updateJob/:id', auth.verifyToken, JobController.updateJob)
 router.delete('/deleteJob/:id', auth.verifyToken, JobController.deleteJob)
 router.put('/updateJobStatus/:id', auth.verifyToken, JobController.updateJobStatus)
+router.post('/newEmailSend/:id', auth.verifyToken, JobController.sendNewJobPositionEmail)
 router.post('/followUpEmail/:id', auth.verifyToken, JobController.followUp)
 
 module.exports = router

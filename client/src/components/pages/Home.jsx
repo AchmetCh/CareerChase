@@ -12,11 +12,13 @@ import { backendApi } from "../../Api";
 const Home = () => {
   const [jobs, setJobs] = useState([])
   const [loading, setLoading] = useState({});
+  const [loading2, setLoading2] = useState({})
   const { token } = useAuth()
   const navigate = useNavigate()
 
   const statusOptions = [
     "Applied",
+    "Email Send",
     "Followed-up",
     "No Answer",
     "Interview Scheduled",
@@ -36,10 +38,35 @@ const Home = () => {
       console.error(error);
     }
   };
-  
+
   useEffect(() => {
     fetchAllJobs();
   }, []);
+
+  const sendNewEmail = async (id) => {
+    console.log(id)
+    setLoading2(prev => ({ ...prev, [id]: true }))
+    try {
+      const response = await axios.post(`${backendApi}/jobs/newEmailSend/${id}`, {}, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token
+        }
+      })
+      toast.success('Email sent successfully', {
+        autoClose: 1000,
+        onClose: () => {
+          fetchAllJobs()
+        }
+      })
+    } catch (error) {
+      console.error(error)
+      toast.error('Error: Email not send')
+
+    } finally {
+      setLoading2(prev => ({ ...prev, [id]: false }))
+    }
+  }
 
   const sendFollowUpEmail = async (id) => {
     setLoading((prev) => ({ ...prev, [id]: true }));
@@ -57,7 +84,7 @@ const Home = () => {
       toast.success("Follow-up email sent successfully", {
         autoClose: 1000,
         onClose: () => {
-          fetchAllJobs(); 
+          fetchAllJobs();
         }
       });
     } catch (error) {
@@ -100,6 +127,7 @@ const Home = () => {
               key={index}
               className={`d-flex flex-column flex-md-row align-items-center justify-content-between 
               p-3 ${job.status === 'Rejected' ? 'bg-danger text-white'
+                : job.status === 'Email Send' ? 'bg-info text-white'
                   : job.status === 'Interview Scheduled' ? 'bg-success text-white'
                     : job.status === 'Followed-up' ? 'bg-primary text-white'
                       : 'bg-dark text-light'}`}
@@ -124,9 +152,18 @@ const Home = () => {
                 </Col>
                 <Col md={4} className="text-center">
                   <h6>{job.jobTitle}</h6>
+                  <h6>{job.jobEmail}</h6>
                   <p className="text-white text-center">{job.applicationDate.slice(0, 10)}</p>
                 </Col>
                 <Col md={4} className="d-flex justify-content-center justify-content-md-end align-items-center">
+                <Button
+                    variant="outline-light"
+                    onClick={() => sendNewEmail(job._id)}
+                    className="mt-2 mt-md-0 me-2"
+                    disabled={loading[job._id]} // Disable button when loading
+                  >
+                    {loading2[job._id] ? 'Wait' : 'Send New Email'}
+                  </Button>
                   <Button
                     variant="outline-light"
                     onClick={() => sendFollowUpEmail(job._id)}

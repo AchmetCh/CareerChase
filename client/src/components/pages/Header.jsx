@@ -24,7 +24,7 @@ const Header = () => {
 
     return (
         <>
-            <Navbar bg="dark" expand="lg">
+            <Navbar bg="dark"  collapseOnSelect>
                 <Container>
                     <Navbar.Brand as={Link} to="/" className="text-white">Home</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
