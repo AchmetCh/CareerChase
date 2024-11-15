@@ -26,18 +26,18 @@ const Header = () => {
         <>
             <Navbar bg="dark"  collapseOnSelect>
                 <Container>
-                    <Navbar.Brand as={Link} to="/" className="text-white">Home</Navbar.Brand>
+                    <Navbar.Brand as={Link} to="/" className="text-white"><Button variant="info">Home</Button></Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
                             {token ? (
                                 <>
                                     <LinkContainer to="/jobs/newJob">
-                                        <Nav.Link className="text-white">Create Job</Nav.Link>
+                                        <Nav.Link className="text-white"><Button>Create Job</Button></Nav.Link>
                                     </LinkContainer>
 
                                     <LinkContainer to={`/jobs/getUserJobs/${userId}`}>
-                                        <Nav.Link className="text-white">User  Jobs</Nav.Link>
+                                        <Nav.Link className="text-white"><Button variant="success">User  Jobs</Button></Nav.Link>
                                     </LinkContainer>
                                 </>
                             ) : (
@@ -51,7 +51,7 @@ const Header = () => {
                         <Nav>
 
                             {token ? (
-                                <Button onClick={handleLogout} className="text-white">Logout</Button>
+                                <Button onClick={handleLogout} className="text-white" variant="danger">Logout</Button>
                             ) : (
                                 <LinkContainer to='/'>
                                     <Button className="text-white">Login</Button>
