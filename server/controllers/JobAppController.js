@@ -22,10 +22,24 @@ Achmet`;
 
 // NewJobPosition message
 const newJobPositionMessage = `Dear Hiring Manager,
-I am writing to express my interest in the [Job Title] position at [company]. I am
-very enthusiastic about the opportunity to join your team and contribute my skills to your organization.
-Thank you for considering my application.
-Best regards,
+
+I hope this email finds you well. My name is Achmet, and I am writing to express my interest in the [Job Title] position at [company]. I came across your job posting and believe that my skills and experience align with the requirements of the role.
+
+I have experience building full-stack applications using the MERN stack, including several personal projects such as:
+
+- [Whiteboard App](https://whiteboard.myrender.eu)
+- [GymBoard Class Booking System](https://gymboard.shaheroes.online)
+- [DoctorDesk Appointment Platform](https://doctordesk.shaheroes.online)
+
+These projects reflect my skills in Node.js, Express, React, MongoDB, as well as my ability to work with third-party APIs like Stripe for payment integration.
+
+Additionally, I bring over 10 years of experience working with Joomla and WordPress, which has given me a solid foundation in web development and problem-solving. I am highly motivated to learn and grow, and I am confident that I can contribute to your team’s success.
+
+Please find my CV attached for your consideration. I would be grateful for the opportunity to discuss how my experience and skills can contribute to [company].
+
+Thank you for your time, and I look forward to hearing from you.
+
+Kind regards,  
 Achmet`;
 
 const transporter = nodemailer.createTransport({
