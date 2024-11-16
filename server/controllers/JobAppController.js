@@ -4,6 +4,7 @@ const JobApp = require("../models/JobApplication");
 const SALT_ROUNDS = +process.env.SALT_ROUNDS;
 const PRIVATE_KEYS = process.env.PRIVATE_KEY;
 const nodemailer = require("nodemailer");
+const path = require("path");
 
 const gmailUser = process.env.EMAIL_USER;
 const gmailPassword = process.env.EMAIL_PASSWORD;
@@ -217,14 +218,23 @@ exports.sendNewJobPositionEmail = async (req, res) => {
   try {
     const job = await JobApp.findById(jobId);
     if (!job) return res.status(404).json({ message: "Job not found." });
+
     const mailOptions = {
-      from: gmailUser,
+      from: gmailUser ,
       to: job.jobEmail,
       subject: `For Job Position ${job.jobTitle} Application`,
       text: newJobPositionMessage
         .replace("[Job Title]", job.jobTitle)
         .replace("[company]", job.company),
+      attachments: [
+        {
+          filename: 'achmet-Chasankilcv3.pdf', // Name of the file as it will appear in the email
+          path: path.join(__dirname, '../files/achmet-Chasankilcv3.pdf'), // Adjust the path to your resume file
+          contentType: 'application/pdf' // Specify the content type
+        }
+      ]
     };
+
     await JobApp.findByIdAndUpdate(jobId, {
       status: "Email Send",
       lastFollowUpDate: Date.now(),
@@ -238,6 +248,32 @@ exports.sendNewJobPositionEmail = async (req, res) => {
       .json({ message: "An error occurred while sending the email." });
   }
 };
+// exports.sendNewJobPositionEmail = async (req, res) => {
+//   const jobId = req.params.id;
+//   try {
+//     const job = await JobApp.findById(jobId);
+//     if (!job) return res.status(404).json({ message: "Job not found." });
+//     const mailOptions = {
+//       from: gmailUser,
+//       to: job.jobEmail,
+//       subject: `For Job Position ${job.jobTitle} Application`,
+//       text: newJobPositionMessage
+//         .replace("[Job Title]", job.jobTitle)
+//         .replace("[company]", job.company),
+//     };
+//     await JobApp.findByIdAndUpdate(jobId, {
+//       status: "Email Send",
+//       lastFollowUpDate: Date.now(),
+//     });
+//     await transporter.sendMail(mailOptions);
+//     return res.status(200).json({ message: "Email sent successfully." });
+//   } catch (error) {
+//     console.error(error);
+//     return res
+//       .status(500)
+//       .json({ message: "An error occurred while sending the email." });
+//   }
+// };
 
 // Follow-up email function
 exports.followUp = async (req, res) => {
