@@ -14,6 +14,9 @@ const jobApplicationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    comments: {
+      type: String
+    },
     applicationDate: {
       type: Date,
       required: true,

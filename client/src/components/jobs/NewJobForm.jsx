@@ -15,6 +15,7 @@ const NewJobForm = () => {
     const [newJob, setNewJob] = useState({
         company: "",
         jobTitle: "",
+        comments: "",
         jobEmail: "",
         applicationDate: new Date().toISOString().split('T')[0]
     })
@@ -69,6 +70,18 @@ const NewJobForm = () => {
                                         onChange={handleInputChange} 
                                         placeholder="Enter job title" 
                                     />
+                                </Form.Group>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Comments</Form.Label>
+                                    <Form.Control
+                                    as="textarea"
+                                    rows={3}
+                                    name="comments"
+                                    value={newJob.comments}
+                                    onChange={handleInputChange}
+                                    placeholder="Enter comments"
+                                    />
+
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                     <Form.Label>Job Email</Form.Label>

@@ -75,7 +75,7 @@ const sendFollowUpEmail = async (email, jobTitle, followUpMessage) => {
 // Create new Job
 exports.createJob = async (req, res) => {
   try {
-    const { company, jobTitle, jobEmail, applicationDate } = req.body;
+    const { company, jobTitle, comments, jobEmail, applicationDate } = req.body;
     const { userId } = req.user;
     // Input validation for required fields
     if (!company || !jobTitle || !jobEmail || !applicationDate) {
@@ -88,6 +88,7 @@ exports.createJob = async (req, res) => {
     const newJob = new JobApp({
       company,
       jobTitle,
+      comments,
       jobEmail,
       applicationDate,
       user: userId,

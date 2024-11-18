@@ -125,12 +125,12 @@ const Home = () => {
           {jobs.map((job, index) => (
             <ListGroup.Item
               key={index}
-              className={`d-flex flex-column flex-md-row align-items-center justify-content-between 
-              p-3 ${job.status === 'Rejected' ? 'bg-danger text-white'
-                : job.status === 'Email Send' ? 'bg-info text-white'
-                  : job.status === 'Interview Scheduled' ? 'bg-success text-white'
-                    : job.status === 'Followed-up' ? 'bg-primary text-white'
-                      : 'bg-dark text-light'}`}
+              className={`flex-column flex-md-row align-items-center justify-content-between 
+                   p-3 ${job.status === 'Rejected' ? 'bg-danger text-white'
+                  : job.status === 'Email Send' ? 'bg-info text-white'
+                    : job.status === 'Interview Scheduled' ? 'bg-success text-white'
+                      : job.status === 'Followed-up' ? 'bg-primary text-white'
+                        : 'bg-dark text-light'}`}
             >
               <Row className="w-100">
                 <Col md={4} className="d-flex flex-column align-items-center text-center text-md-start">
@@ -156,7 +156,7 @@ const Home = () => {
                   <p className="text-white text-center">{job.applicationDate.slice(0, 10)}</p>
                 </Col>
                 <Col md={4} className="d-flex justify-content-center justify-content-md-end align-items-center">
-                <Button
+                  <Button
                     variant="outline-light"
                     onClick={() => sendNewEmail(job._id)}
                     className="mt-2 mt-md-0 me-2"
@@ -173,6 +173,14 @@ const Home = () => {
                     {loading[job._id] ? 'Wait' : 'Send Follow-Up'}
                   </Button>
                 </Col>
+              </Row>
+              <Row>
+                <Col md={12} className='d-flex'>
+                  <h6 className='me-5'>Notes:</h6>
+                  <p>{job.comments}</p>
+                </Col>
+                
+                
               </Row>
             </ListGroup.Item>
           ))}
