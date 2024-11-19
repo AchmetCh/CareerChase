@@ -176,7 +176,7 @@ const Home = () => {
               </Row>
               <Row>
                 <Col md={12} className='d-flex'>
-                  <h6 className='me-5'>Notes:</h6>
+                  <h6 className='me-5'>{job.comments? 'Notes:' : ''}</h6>
                   <p>{job.comments}</p>
                 </Col>
                 
