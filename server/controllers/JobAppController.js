@@ -1,11 +1,13 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const JobApp = require("../models/JobApplication");
+const FormData = require("form-data");
+const Mailgun = require("mailgun.js");
 const SALT_ROUNDS = +process.env.SALT_ROUNDS;
 const PRIVATE_KEYS = process.env.PRIVATE_KEY;
 const nodemailer = require("nodemailer");
 const path = require("path");
-
+const fs = require('fs');
 const gmailUser = process.env.EMAIL_USER;
 const gmailPassword = process.env.EMAIL_PASSWORD;
 
@@ -43,8 +45,7 @@ Kind regards,
 Achmet`;
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  // host: "mail.myrender.eu",
+  host: "smtp.eu.mailgun.org",
   port: 465,
   secure: true,
   auth: {
@@ -56,16 +57,26 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+const mailgun = new Mailgun(FormData);
+const mg = mailgun.client({
+  username: "api",
+  key: process.env.API_KEY,
+  // When you have an EU-domain, you must specify the endpoint:
+  url: "https://api.eu.mailgun.net"
+});
+
 const sendFollowUpEmail = async (email, jobTitle, followUpMessage) => {
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    // from: process.env.EMAIL_USER,
+    from: 'Achmet Chasankil <gigsakos@gmail.com>',
     to: email,
     subject: `Follow-up on Job Application: ${jobTitle}`,
     html: `<p>Hello,</p><p>${followUpMessage}</p><p>Thank you,</p>`,
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    // await transporter.sendMail(mailOptions);
+    await mg.messages.create("myrender.eu", mailOptions);
     console.log(`Follow-up email sent to: ${email}`);
   } catch (error) {
     console.error("Error sending follow-up email:", error);
@@ -228,59 +239,35 @@ exports.updateJobStatus = async (req, res) => {
 };
 
 // New JobPosition email function
-exports.sendNewJobPositionEmail = async (req, res) => {
-  const jobId = req.params.id;
-  try {
-    const job = await JobApp.findById(jobId);
-    if (!job) return res.status(404).json({ message: "Job not found." });
-
-    const mailOptions = {
-      from: gmailUser ,
-      to: job.jobEmail,
-      subject: `For Job Position ${job.jobTitle} Application`,
-      text: newJobPositionMessage
-        .replace("[Job Title]", job.jobTitle)
-        .replace("[company]", job.company),
-      attachments: [
-        {
-          filename: 'achmet-Chasankilcv3.pdf', // Name of the file as it will appear in the email
-          path: path.join(__dirname, '../files/achmet-Chasankilcv3.pdf'), // Adjust the path to your resume file
-          contentType: 'application/pdf' // Specify the content type
-        }
-      ]
-    };
-
-    await JobApp.findByIdAndUpdate(jobId, {
-      status: "Email Send",
-      lastFollowUpDate: Date.now(),
-    });
-    await transporter.sendMail(mailOptions);
-    return res.status(200).json({ message: "Email sent successfully." });
-  } catch (error) {
-    console.error(error);
-    return res
-      .status(500)
-      .json({ message: "An error occurred while sending the email." });
-  }
-};
 // exports.sendNewJobPositionEmail = async (req, res) => {
 //   const jobId = req.params.id;
 //   try {
 //     const job = await JobApp.findById(jobId);
 //     if (!job) return res.status(404).json({ message: "Job not found." });
+
 //     const mailOptions = {
-//       from: gmailUser,
+//       // from: gmailUser ,
+//       from: 'Achmet Chasankil <gigsakos@gmail.com>',
 //       to: job.jobEmail,
 //       subject: `For Job Position ${job.jobTitle} Application`,
 //       text: newJobPositionMessage
 //         .replace("[Job Title]", job.jobTitle)
 //         .replace("[company]", job.company),
+//       attachments: [
+//         {
+//           filename: 'achmet-Chasankilcv3.pdf', // Name of the file as it will appear in the email
+//           path: path.join(__dirname, '../files/achmet-Chasankilcv3.pdf'), // Adjust the path to your resume file
+//           contentType: 'application/pdf' // Specify the content type
+//         }
+//       ]
 //     };
+
 //     await JobApp.findByIdAndUpdate(jobId, {
 //       status: "Email Send",
 //       lastFollowUpDate: Date.now(),
 //     });
-//     await transporter.sendMail(mailOptions);
+//     // await transporter.sendMail(mailOptions);
+//     await mg.messages.create("myrender.eu", mailOptions);
 //     return res.status(200).json({ message: "Email sent successfully." });
 //   } catch (error) {
 //     console.error(error);
@@ -290,16 +277,55 @@ exports.sendNewJobPositionEmail = async (req, res) => {
 //   }
 // };
 
-// Follow-up email function
-exports.followUp = async (req, res) => {
-  const jobId = req.params.id;
 
+
+// New JobPosition email function
+exports.sendNewJobPositionEmail = async (req, res) => {
+  const jobId = req.params.id;
   try {
     const job = await JobApp.findById(jobId);
     if (!job) return res.status(404).json({ message: "Job not found." });
 
     const mailOptions = {
-      from: gmailUser,
+      from: 'Achmet Chasankil <gigsakos@gmail.com>',
+      to: job.jobEmail,
+      subject: `For Job Position ${job.jobTitle} Application`,
+      text: newJobPositionMessage
+        .replace("[Job Title]", job.jobTitle)
+        .replace("[company]", job.company),
+      attachment: [
+        {
+          filename: 'achmet-Chasankilcv3.pdf',
+          data: fs.createReadStream(path.join(__dirname, '../files/achmet-Chasankilcv3.pdf')), // Stream the file content
+          contentType: 'application/pdf',
+        }
+      ]
+    };
+
+    await JobApp.findByIdAndUpdate(jobId, {
+      status: "Email Sent",
+      lastFollowUpDate: Date.now(),
+    });
+
+    const data = await mg.messages.create("myrender.eu", mailOptions);
+    console.log("Email sent successfully:", data);
+    return res.status(200).json({ message: "Email sent successfully." });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return res.status(500).json({ message: "An error occurred while sending the email." });
+  }
+};
+
+
+// Follow-up email function
+exports.followUp = async (req, res) => {
+  const jobId = req.params.id;
+  try {
+    const job = await JobApp.findById(jobId);
+    if (!job) return res.status(404).json({ message: "Job not found." });
+
+    const mailOptions = {
+      from: 'Achmet Chasankil <gigsakos@gmail.com>',
       to: job.jobEmail, // assuming you store the company's email in the job model
       subject: `Follow-up on ${job.jobTitle} Application`,
       text: followUpMessage
@@ -311,9 +337,12 @@ exports.followUp = async (req, res) => {
       lastFollowUpDate: Date.now(),
     });
 
-    await transporter.sendMail(mailOptions);
+    // await transporter.sendMail(mailOptions);
+    await mg.messages.create("myrender.eu", mailOptions);
     res.status(200).json({ message: "Follow-up email sent successfully." });
   } catch (error) {
+    console.error("Error sending follow-up email:", error);
     res.status(500).json({ message: "Error sending follow-up email", error });
   }
 };
+
