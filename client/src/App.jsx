@@ -18,9 +18,9 @@ function App() {
   const { userId, token } = useAuth()
   return (
     <div className="app">
-      <Header />
       {token ? (
         <>
+        <Header />
           <Routes>
           <Route path="/" element={<Home />} />
             <Route path='/jobs/newJob' element={<NewJobForm />} />

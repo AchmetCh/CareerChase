@@ -5,7 +5,6 @@ const authRoutes = require('./routes/AuthRoutes')
 const jobRoutes = require('./routes/JobRoutes')
 const app = express()
 const port = 8000
-const cookieParser = require('cookie-parser');
 app.use(express.json())
 
 // app.options('*', cors())
@@ -21,7 +20,6 @@ app.use(cors({
   origin: true,  // Allows all origins
   credentials: true
 }));
-  app.use(cookieParser());
 
   app.use('/user', authRoutes)
   app.use('/jobs', jobRoutes)

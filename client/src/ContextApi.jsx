@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(localStorage.getItem('Authorization'));
 
     useEffect(() => {
+        console.log("Token from localStorage:", token);
         if (token) {
             const decodedToken = jwtDecode(token);
             setUserId(decodedToken.userId);
