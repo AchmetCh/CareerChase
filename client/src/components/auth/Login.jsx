@@ -43,7 +43,7 @@ const Login = () => {
                 style={{ minHeight: "50vh" }}
             >
                 <Card className="p-4" style={{ width: "400px" }}>
-                    <h2>Login</h2>
+                    <h2 style={{textAlign: 'center', fontWeight: 'bold'}}>Login</h2>
 
                     <Form onSubmit={handleLogin} className="mx-auto mx-3">
                         <Form.Group controlId="formBasicEmail">
