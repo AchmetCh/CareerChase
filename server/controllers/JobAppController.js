@@ -251,7 +251,7 @@ exports.sendNewJobPositionEmail = async (req, res) => {
       to: job.jobEmail,
       subject: `For Job Position ${job.jobTitle} Application`,
       text: newJobPositionMessage
-        .replace("[Job Title]", job.jobTitle)
+      .replaceAll("[Job Title]", job.jobTitle)
         .replaceAll("[company]", job.company),
         replyTo: "gigsakos@gmail.com",
       attachment: [
