@@ -116,6 +116,27 @@ const Home = () => {
     }
   };
 
+    const handleDelete = async (jobId) => {
+      try {
+        const response = await axios.delete(`${backendApi}/jobs/deleteJob/${jobId}`, {
+          headers: {
+            "Authorization": token
+          }
+        })
+        setJobs(jobs.filter(job => job._id !== jobId))
+        toast.success('Job deleted successfully', {
+          autoClose: 2000,
+          onClose: () => navigate('/')
+        })
+      } catch (error) {
+        console.error(error)
+        toast.error('Error deleting Job', {
+          autoClose: 2000,
+          onClose: () => navigate('/')
+        })
+      }
+    }
+
   console.log(jobs)
   return (
     <div>
@@ -172,6 +193,13 @@ const Home = () => {
                   >
                     {loading[job._id] ? 'Wait' : 'Send Follow-Up'}
                   </Button>
+                  <Button
+                    variant="outline-danger"
+                    onClick={() => handleDelete(job._id)}
+                    className="mt-2 mt-md-0 ms-2"
+                  >
+                    Delete
+                  </Button>
                 </Col>
               </Row>
               <Row>
@@ -179,8 +207,6 @@ const Home = () => {
                   <h6 className='me-5'>{job.comments? 'Notes:' : ''}</h6>
                   <p>{job.comments}</p>
                 </Col>
-                
-                
               </Row>
             </ListGroup.Item>
           ))}
