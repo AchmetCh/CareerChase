@@ -25,24 +25,28 @@ Achmet`;
 // NewJobPosition message
 const newJobPositionMessage = `Dear Hiring Manager,
 
-I hope this email finds you well. My name is Achmet, and I am writing to express my interest in the [Job Title] position at [company]. I came across your job posting and believe that my skills and experience align with the requirements of the role.
+I hope this email finds you well. My name is Achmet, and I’m writing to express my interest in the [Job Title] position at [company]. After reviewing your job posting, I believe my skills and experience are a strong match for the role.
 
-I have experience building full-stack applications using the MERN stack, including several personal projects such as:
+I’ve built several full-stack applications using the MERN stack, including:
 
-- [Whiteboard App](https://whiteboard.myrender.eu)
-- [GymBoard Class Booking System](https://gymboard.shaheroes.online)
-- [DoctorDesk Appointment Platform](https://doctordesk.shaheroes.online)
+- Whiteboard App: https://whiteboard.myrender.eu
+- GymBoard Class Booking System: https://gymboard.shaheroes.online
+- StayInXanthi: https://stayinxanthi.gr
 
-These projects reflect my skills in Node.js, Express, React, MongoDB, as well as my ability to work with third-party APIs like Stripe for payment integration.
+These projects demonstrate my skills with Node.js, Express.js, React, and MongoDB, as well as integration with third-party APIs like Stripe for payments.
 
-Additionally, I bring over 10 years of experience working with Joomla and WordPress, which has given me a solid foundation in web development and problem-solving. I am highly motivated to learn and grow, and I am confident that I can contribute to your team’s success.
+In addition, I bring over 10 years of experience with CMS platforms like WordPress and Joomla, giving me a strong foundation in web development and problem-solving.
 
-Please find my CV attached for your consideration. I would be grateful for the opportunity to discuss how my experience and skills can contribute to [company].
+I’m highly motivated to learn and grow, and I would be excited to contribute to your team. Please find my CV attached for your consideration.
 
 Thank you for your time, and I look forward to hearing from you.
 
 Kind regards,  
-Achmet`;
+Achmet Chasankil  
+GitHub: https://github.com/AchmetCh  
+LinkedIn: https://www.linkedin.com/in/achmet-ch/  
+Email: gigsakos@gmail.com`;
+
 
 const transporter = nodemailer.createTransport({
   host: "smtp.eu.mailgun.org",
