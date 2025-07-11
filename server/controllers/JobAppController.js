@@ -22,6 +22,20 @@ Thank you for considering my application.
 Best regards,
 Achmet`;
 
+const followUpMessageGR = `Αξιότιμε/η Υπεύθυνε Πρόσληψης,
+
+Ελπίζω αυτό το μήνυμα να σας βρίσκει καλά. Θα ήθελα να σας υπενθυμίσω το ενδιαφέρον μου για τη θέση [Job Title] στην εταιρεία [company].
+
+Είμαι ιδιαίτερα ενθουσιασμένος με την προοπτική να ενταχθώ στην ομάδα σας και να αξιοποιήσω τις δεξιότητές μου για να συμβάλλω στην επιτυχία της εταιρείας.
+
+Παραμένω στη διάθεσή σας για οποιαδήποτε επιπλέον πληροφορία ή διευκρίνιση.
+
+Με εκτίμηση,  
+Αχμέτ`;
+
+
+
+
 // NewJobPosition message
 const newJobPositionMessage = `Dear Hiring Manager,
 
@@ -46,6 +60,31 @@ Achmet Chasankil
 GitHub: https://github.com/AchmetCh  
 LinkedIn: https://www.linkedin.com/in/achmet-ch/  
 Email: gigsakos@gmail.com`;
+
+const newJobPositionMessageGR = `Γεια σας,
+
+Ονομάζομαι Αχμέτ και ενδιαφέρομαι για τη θέση [Job Title] στην εταιρεία [company]. Αφού διάβασα την αγγελία σας, πιστεύω ότι οι δεξιότητες και η εμπειρία μου ταιριάζουν με τις απαιτήσεις της θέσης.
+
+Έχω αναπτύξει διάφορες full-stack εφαρμογές χρησιμοποιώντας το MERN stack, όπως:
+
+- StayInXanthi – Πλατφόρμα Καταχωρήσεων: https://stayinxanthi.gr
+- Whiteboard App: https://whiteboard.myrender.eu  
+- GymBoard – Σύστημα Κρατήσεων Μαθημάτων: https://gymboard.shaheroes.online  
+
+Αυτά τα έργα αναδεικνύουν τις γνώσεις μου σε Node.js, Express.js, React και MongoDB, καθώς και την εμπειρία μου στη χρήση εξωτερικών APIs, όπως Stripe για πληρωμές.
+
+Επιπλέον, διαθέτω πάνω από 10 χρόνια εμπειρίας σε CMS πλατφόρμες όπως WordPress και Joomla, γεγονός που μου έχει προσφέρει μια δυνατή βάση στο web development και στην επίλυση προβλημάτων.
+
+Είμαι πολύ πρόθυμος να μάθω και να εξελιχθώ, και θα ήταν τιμή μου να συμβάλλω στην ομάδα σας. Σας επισυνάπτω το βιογραφικό μου για την αξιολόγησή σας.
+
+Σας ευχαριστώ για τον χρόνο σας και ελπίζω να έχω νέα σας σύντομα.
+
+Με εκτίμηση,  
+Achmet Chasankil  
+GitHub: https://github.com/AchmetCh  
+LinkedIn: https://www.linkedin.com/in/achmet-ch/  
+Email: gigsakos@gmail.com`;
+
 
 
 const transporter = nodemailer.createTransport({
@@ -281,6 +320,44 @@ exports.sendNewJobPositionEmail = async (req, res) => {
   }
 };
 
+// New JobPosition email function in Greek
+exports.sendNewJobPositionEmailGR = async (req, res) => {
+  const jobId = req.params.id;
+  try {
+    const job = await JobApp.findById(jobId);
+    if (!job) return res.status(404).json({ message: "Job not found." });
+
+    const mailOptions = {
+      from: 'Achmet Chasankil <achmet-chasankil@myrender.eu>',
+      to: job.jobEmail,
+      subject: `Για τη θέση εργασίας ως ${job.jobTitle} Αίτηση`,
+      text: newJobPositionMessageGR
+      .replaceAll("[Job Title]", job.jobTitle)
+        .replaceAll("[company]", job.company),
+        replyTo: "gigsakos@gmail.com",
+      attachment: [
+        {
+          filename: 'achmet-Chasankilcv3.pdf',
+          data: fs.createReadStream(path.join(__dirname, '../files/achmet-Chasankilcv3.pdf')), // Stream the file content
+          contentType: 'application/pdf',
+        }
+      ]
+    };
+
+    await JobApp.findByIdAndUpdate(jobId, {
+      status: "Email Sent",
+      lastFollowUpDate: Date.now(),
+    });
+
+    const data = await mg.messages.create("myrender.eu", mailOptions);
+    console.log("Email sent successfully:", data);
+    return res.status(200).json({ message: "Email sent successfully." });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return res.status(500).json({ message: "An error occurred while sending the email." });
+  }
+};
+
 
 // Follow-up email function
 exports.followUp = async (req, res) => {
@@ -294,6 +371,36 @@ exports.followUp = async (req, res) => {
       to: job.jobEmail, // assuming you store the company's email in the job model
       subject: `Follow-up on ${job.jobTitle} Application`,
       text: followUpMessage
+        .replace("[Job Title]", job.jobTitle)
+        .replace("[company]", job.company),
+        replyTo: "gigsakos@gmail.com",
+    };
+    await JobApp.findByIdAndUpdate(jobId, {
+      status: "Followed-up",
+      lastFollowUpDate: Date.now(),
+    });
+
+    // await transporter.sendMail(mailOptions);
+    await mg.messages.create("myrender.eu", mailOptions);
+    res.status(200).json({ message: "Follow-up email sent successfully." });
+  } catch (error) {
+    console.error("Error sending follow-up email:", error);
+    res.status(500).json({ message: "Error sending follow-up email", error });
+  }
+};
+
+// Follow-up email function in Greek
+exports.followUpGR = async (req, res) => {
+  const jobId = req.params.id;
+  try {
+    const job = await JobApp.findById(jobId);
+    if (!job) return res.status(404).json({ message: "Job not found." });
+
+    const mailOptions = {
+      from: 'Achmet Chasankil <achmet-chasankil@myrender.eu>',
+      to: job.jobEmail, // assuming you store the company's email in the job model
+      subject: `Follow-up on ${job.jobTitle} Application`,
+      text: followUpMessageGR
         .replace("[Job Title]", job.jobTitle)
         .replace("[company]", job.company),
         replyTo: "gigsakos@gmail.com",
